@@ -78,7 +78,7 @@ TEST(UnityBridge, HandleOutputDepth) {
   QuadrotorDynamics dyn = QuadrotorDynamics(1.0, 0.2);
   std::shared_ptr<Quadrotor> quad = std::make_shared<Quadrotor>(dyn);
   std::shared_ptr<RGBCamera> rgb = std::make_shared<RGBCamera>();
-  rgb->setPostProcesscing(std::vector<bool>{true, false, false});
+  rgb->setPostProcessing(std::vector<bool>{true, false, false});
   quad->addRGBCamera(rgb);
   unity_bridge.addQuadrotor(quad);
 
@@ -107,7 +107,7 @@ TEST(UnityBridge, HandleOutputSegmentation) {
   QuadrotorDynamics dyn = QuadrotorDynamics(1.0, 0.2);
   std::shared_ptr<Quadrotor> quad = std::make_shared<Quadrotor>(dyn);
   std::shared_ptr<RGBCamera> rgb = std::make_shared<RGBCamera>();
-  rgb->setPostProcesscing(std::vector<bool>{false, true, false});
+  rgb->setPostProcessing(std::vector<bool>{false, true, false});
   quad->addRGBCamera(rgb);
   unity_bridge.addQuadrotor(quad);
 
@@ -136,7 +136,7 @@ TEST(UnityBridge, HandleOutputOpticalFlow) {
   QuadrotorDynamics dyn = QuadrotorDynamics(1.0, 0.2);
   std::shared_ptr<Quadrotor> quad = std::make_shared<Quadrotor>(dyn);
   std::shared_ptr<RGBCamera> rgb = std::make_shared<RGBCamera>();
-  rgb->setPostProcesscing(std::vector<bool>{false, false, true});
+  rgb->setPostProcessing(std::vector<bool>{false, false, true});
   quad->addRGBCamera(rgb);
   unity_bridge.addQuadrotor(quad);
 
@@ -172,7 +172,7 @@ TEST(UnityBridge, SpawnStaticGate) {
   state.x[QS::POSZ] = (Scalar)-3;
   quad->setState(state);
   std::shared_ptr<RGBCamera> rgb = std::make_shared<RGBCamera>();
-  rgb->setPostProcesscing(std::vector<bool>{false, false, true});
+  rgb->setPostProcessing(std::vector<bool>{false, false, true});
   quad->addRGBCamera(rgb);
   unity_bridge.addQuadrotor(quad);
 
@@ -198,7 +198,7 @@ TEST(UnityBridge, Spawn100StaticGate) {
   state.x[QS::POSZ] = (Scalar)-3;
   quad->setState(state);
   std::shared_ptr<RGBCamera> rgb = std::make_shared<RGBCamera>();
-  rgb->setPostProcesscing(std::vector<bool>{false, false, true});
+  rgb->setPostProcessing(std::vector<bool>{false, false, true});
   quad->addRGBCamera(rgb);
   unity_bridge.addQuadrotor(quad);
 

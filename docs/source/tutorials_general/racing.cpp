@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   racing::rgb_camera_->setWidth(720);
   racing::rgb_camera_->setHeight(480);
   racing::rgb_camera_->setRelPose(B_r_BC, R_BC);
-  racing::rgb_camera_->setPostProcesscing(std::vector<bool>{
+  racing::rgb_camera_->setPostProcessing(std::vector<bool>{
     false, false, false});  // depth, segmentation, optical flow
   racing::quad_ptr_->addRGBCamera(racing::rgb_camera_);
 

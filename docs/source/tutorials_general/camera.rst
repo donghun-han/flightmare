@@ -25,7 +25,7 @@ Setup and spawn the camera
   rgb_camera_->setWidth(720);
   rgb_camera_->setHeight(480);
   rgb_camera_->setRelPose(B_r_BC, R_BC);
-  rgb_camera_->setPostProcesscing(
+  rgb_camera_->setPostProcessing(
     std::vector<bool>{false, false, false});  // depth, segmentation, optical flow
   quad_ptr_->addRGBCamera(rgb_camera_);
 

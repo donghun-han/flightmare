@@ -61,7 +61,7 @@ Camera References
     :type depth_scale: const Scalar
     :rtype: bool
 
-  .. function:: setPostProcesscing(const std::vector<bool>& enabled_layers)
+  .. function:: setPostProcessing(const std::vector<bool>& enabled_layers)
 
     Enable the post-processing layers.
 

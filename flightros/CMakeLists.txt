@@ -1,14 +1,7 @@
+cmake_minimum_required(VERSION 3.0.2)
 project(flightros)
 
-cmake_minimum_required(VERSION 3.0.0)
-
-find_package(catkin_simple REQUIRED)
-
 find_package(OpenCV REQUIRED)
-
-option(BUILD_MP "Build Motion Planning" OFF)
-
-catkin_simple()
 
 # Setup Default Build Type as Release
 if (NOT CMAKE_BUILD_TYPE)
@@ -36,120 +29,98 @@ add_compile_options(-O3)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_ARCH_FLAGS} -Wall -DNDEBUG -fPIC")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Wall -g")
 
-#pilot
-
-cs_add_library(flight_pilot
-    src/pilot/flight_pilot.cpp
+find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    flightlib
+    image_transport
+    cv_bridge
 )
 
-target_link_libraries(flight_pilot
+catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES flightros
+    CATKIN_DEPENDS roscpp flightlib image_transport cv_bridge
+)
+
+include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+)
+
+add_library(racing_simulator
+    src/racing_simulator.cpp
+)
+target_link_libraries(racing_simulator
+    ${catkin_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    stdc++fs
+    zmq
+    zmqpp
+)
+
+add_executable(racing_simulator_node
+    src/racing_simulator_node.cpp
+)
+target_link_libraries(racing_simulator_node
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   stdc++fs
+  zmq
+  zmqpp
+  racing_simulator
 )
 
-cs_add_executable(flight_pilot_node
-   src/pilot/flight_pilot_node.cpp
-)
+#############
+## Install ##
+#############
 
-target_link_libraries(flight_pilot_node
-  flight_pilot
-  ${OpenCV_LIBRARIES}
-  stdc++fs
-)
+# all install targets should use catkin DESTINATION variables
+# See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
-# motion_planning
+## Mark executable scripts (Python etc.) for installation
+## in contrast to setup.py, you can choose the destination
+# catkin_install_python(PROGRAMS
+#   scripts/my_python_script
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
-if(BUILD_MP)
+## Mark executables for installation
+## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
+# install(TARGETS ${PROJECT_NAME}_node
+#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
-    find_package(OpenMP)
-    if (OpenMP_CXX_FOUND)
-        message("Found OpenMP ${OpenMP_CXX_FOUND}  ${OpenMP_VERSION} ${OpenMP_CXX_VERSION_MAJOR} ${Open3D_VERSION} OpenMP::OpenMP_CXX")
-        get_cmake_property(_variableNames VARIABLES)
-        list (SORT _variableNames)
-        foreach (_variableName ${_variableNames})
-            message(STATUS "${_variableName}=${${_variableName}}")
-        endforeach()
-    else ()
-        message("OpenMP not found")
-    endif ()
+## Mark libraries for installation
+## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
+# install(TARGETS ${PROJECT_NAME}
+#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+# )
 
-    # Open3D
-    find_package(Open3D)
-    if (Open3D_FOUND)
-        message("Found Open3D ${Open3D_VERSION}")
-        list(APPEND Open3D_LIBRARIES dl)
-        # link_directories must be before add_executable
-        link_directories(${Open3D_LIBRARY_DIRS})
-    else ()
-        message("Open3D not found")
-    endif ()
+## Mark cpp header files for installation
+# install(DIRECTORY include/${PROJECT_NAME}/
+#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+#   FILES_MATCHING PATTERN "*.h"
+#   PATTERN ".svn" EXCLUDE
+# )
 
-    find_package(ompl REQUIRED)
-    if (OMPL_FOUND)
-        message("Found OMPL ${OMPL_VERSION}")
-        include_directories(${OMPL_INCLUDE_DIRS})
+## Mark other files for installation (e.g. launch and bag files, etc.)
+# install(FILES
+#   # myfile1
+#   # myfile2
+#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+# )
 
-     else ()
-        message("OMPL not found")
-    endif ()
+#############
+## Testing ##
+#############
 
-    if (OpenMP_CXX_FOUND AND Open3D_FOUND AND OMPL_FOUND)
-        cs_add_executable(motion_planning
-            src/motion_planning/motion_planning.cpp
-        )
-        target_include_directories(motion_planning PUBLIC ${Open3D_INCLUDE_DIRS})
+## Add gtest based cpp test target and link libraries
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_test.cpp)
+# if(TARGET ${PROJECT_NAME}-test)
+#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+# endif()
 
-        target_link_libraries(motion_planning
-        ${catkin_LIBRARIES}
-        ${OpenCV_LIBRARIES}
-        stdc++fs
-        ompl
-        ${Open3D_LIBRARIES}
-        OpenMP::OpenMP_CXX
-        zmq
-        zmqpp
-        )
-    else ()
-        message("Failed to build motion planning")
-    endif ()
-
-endif()
-
-# racing
-
-
-catkin_package(
-LIBRARIES
-CATKIN_DEPENDS
-)
-
-cs_add_executable(racing
-    src/racing/racing.cpp
-)
-
-target_link_libraries(racing
-${catkin_LIBRARIES}
-${OpenCV_LIBRARIES}
-stdc++fs
-zmq
-zmqpp
-)
-
-# camera
-
-cs_add_executable(camera
-    src/camera/camera.cpp
-)
-
-target_link_libraries(camera
-${catkin_LIBRARIES}
-${OpenCV_LIBRARIES}
-stdc++fs
-zmq
-zmqpp
-)
-
-# Finish
-cs_install()
-cs_export()
+## Add folders to be run by python nosetests
+# catkin_add_nosetests(test)

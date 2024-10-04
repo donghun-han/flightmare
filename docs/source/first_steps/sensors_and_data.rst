@@ -59,7 +59,7 @@ Post-processing layers like depth, segmentation and optical flow can be enabled.
   rgb_camera_->setWidth(720);
   rgb_camera_->setHeight(480);
   rgb_camera_->setRelPose(B_r_BC, R_BC);
-  rgb_camera_->setPostProcesscing(
+  rgb_camera_->setPostProcessing(
     std::vector<bool>{true, true, true});  // depth, segmentation, optical flow
   quad_ptr_->addRGBCamera(rgb_camera_);
 

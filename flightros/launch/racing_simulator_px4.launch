@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find px4)/launch/mavros_posix_sitl.launch" >
+    </include>
+
+
+    <node pkg="flightros" type="racing_simulator_node" name="racing_simulator" output="screen">
+        <remap from="flightmare/uav_state" to="mavros/local_position/odom" />
+    </node>
+    <node pkg="flightrender" type="RPG_Flightmare.x86_64" name="rpg_flightmare_render">
+    </node>
+
+</launch>

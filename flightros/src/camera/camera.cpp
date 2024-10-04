@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
   rgb_camera->setWidth(640);
   rgb_camera->setHeight(360);
   rgb_camera->setRelPose(B_r_BC, R_BC);
-  rgb_camera->setPostProcesscing(
+  rgb_camera->setPostProcessing(
     std::vector<bool>{true, true, true});  // depth, segmentation, optical flow
   quad_ptr->addRGBCamera(rgb_camera);
 
